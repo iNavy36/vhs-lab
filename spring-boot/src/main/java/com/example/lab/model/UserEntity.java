@@ -18,15 +18,14 @@ public class UserEntity {
     @Column(name = "user_name")
     private String name;
 
-    @Column(name = "user_email")
+    @Column(name = "user_email", unique = true)
     private String email;
 
     public UserEntity() {
 
     }
 
-    public UserEntity(Long id, String name, String email) {
-        this.id = id;
+    public UserEntity(String name, String email) {
         this.name = name;
         this.email = email;
     }
