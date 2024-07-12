@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.lab.model.VHSEntity;
 
-interface VHSRepository extends JpaRepository<VHSEntity, Long> {
+public interface VHSRepository extends JpaRepository<VHSEntity, Long> {
 
 }
