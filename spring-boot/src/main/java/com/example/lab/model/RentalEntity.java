@@ -19,11 +19,8 @@ public class RentalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rental_begin_date", nullable = false)
-    private LocalDate beginDate;
-
-    @Column(name = "rental_end_date")
-    private LocalDate endDate;
+    @Column(name = "rental_date", nullable = false)
+    private LocalDate rentDate;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -37,8 +34,8 @@ public class RentalEntity {
 
     }
 
-    public RentalEntity(LocalDate beginDate, UserEntity userEntity, VHSEntity vhsEntity) {
-        this.beginDate = beginDate;
+    public RentalEntity(LocalDate rentDate, UserEntity userEntity, VHSEntity vhsEntity) {
+        this.rentDate = rentDate;
         this.userEntity = userEntity;
         this.vhsEntity = vhsEntity;
     }
@@ -47,12 +44,8 @@ public class RentalEntity {
         return this.id;
     }
 
-    public LocalDate getBeginDate() {
-        return this.beginDate;
-    }
-
-    public LocalDate getEndDate() {
-        return this.endDate;
+    public LocalDate getRentDate() {
+        return this.rentDate;
     }
 
     public UserEntity getUser() {
@@ -63,12 +56,8 @@ public class RentalEntity {
         return this.vhsEntity;
     }
 
-    public void setBeginDate(LocalDate beginDate) {
-        this.beginDate = beginDate;
-    }
-
     public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+        this.rentDate = endDate;
     }
 
     public void setUser(UserEntity userEntity) {

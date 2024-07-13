@@ -1,10 +1,13 @@
 package com.example.lab.model;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,6 +23,9 @@ public class UserEntity {
 
     @Column(name = "user_email", unique = true)
     private String email;
+
+    @OneToMany(mappedBy = "userEntity")
+    private Set<RentalEntity> rentals;
 
     public UserEntity() {
 
@@ -40,6 +46,10 @@ public class UserEntity {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public Set<RentalEntity> getRentals() {
+        return this.rentals;
     }
 
     public void setName(String name) {
