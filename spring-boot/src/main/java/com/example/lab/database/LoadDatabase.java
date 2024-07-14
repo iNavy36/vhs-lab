@@ -17,11 +17,11 @@ public class LoadDatabase {
   CommandLineRunner initDatabase(VHSRepository vhsRepository, UserRepository userRepository) {
 
     return args -> {
-      log.info("Preloading " + vhsRepository.save(new VHSEntity("Back To The Future 2", 0)));
-      log.info("Preloading " + vhsRepository.save(new VHSEntity("Back To The Future 2", 0)));
-      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Lion King", 0)));
-      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Lion King", 0)));
-      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Exterminator", 0)));
+      log.info("Preloading " + vhsRepository.save(new VHSEntity("Back To The Future 2", 3.0f)));
+      log.info("Preloading " + vhsRepository.save(new VHSEntity("Back To The Future 2", 3.0f)));
+      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Lion King", 5.0f)));
+      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Lion King", 5.0f)));
+      log.info("Preloading " + vhsRepository.save(new VHSEntity("The Exterminator", 8.0f)));
 
       log.info("Preloading " + userRepository.save(new UserEntity("Admin Admin", "admin@mail.com")));
       log.info("Preloading " + userRepository.save(new UserEntity("First User", "user1@mail.com")));

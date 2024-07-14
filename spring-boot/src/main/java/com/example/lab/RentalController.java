@@ -1,5 +1,6 @@
 package com.example.lab;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,8 @@ public class RentalController {
             throw new UserNotFoundException(user_id);
         if (userRepository.getReferenceById(vhs_id) == null)
             throw new VHSNotFoundException(vhs_id);
-        if (rentalRepository.findByVhsEntityId(vhs_id) != null)
+        RentalEntity existingRental = rentalRepository.findByVhsEntityId(vhs_id);
+        if (existingRental != null && existingRental.getReturnDate() == null)
             throw new RentalExistingForVHSException(vhs_id);
         log.info("Creating new rental, user_id=" + user_id + ", vhs_id=" + vhs_id + ", date=" + date);
         return rentalRepository
@@ -71,16 +73,20 @@ public class RentalController {
     }
 
     @PutMapping("/{id}")
-    RentalEntity replaceVhsInRental(@PathVariable Long id, @RequestBody Long vhs_id) {
-        if (userRepository.getReferenceById(vhs_id) == null)
-            throw new VHSNotFoundException(vhs_id);
-        log.info("Updating rental by id=" + id + " with new vhs id=" + vhs_id);
-        return rentalRepository.findById(id)
+    Float endRental(@PathVariable Long id) {
+        log.info("Ended rental by id=" + id);
+        RentalEntity returned = rentalRepository.findById(id)
                 .map(rental -> {
-                    rental.setVHS(vhsRepository.getReferenceById(vhs_id));
+                    rental.setReturnDate(LocalDate.now());
                     return rentalRepository.save(rental);
                 })
                 .orElseThrow(() -> new RentalNotFoundException(id));
+        long daysBetween = Duration
+                .between(returned.getRentDate().atStartOfDay(), returned.getReturnDate().atStartOfDay()).toDays();
+        if (daysBetween > 0)
+            return returned.getVHS().getRent() * daysBetween;
+        else
+            return 0.0f;
     }
 
     @DeleteMapping("/{id}")

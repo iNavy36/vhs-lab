@@ -23,7 +23,7 @@ public class VHSEntity {
 
     // not sure about rent if it should be on rental entity or here...
     @Column(name = "vhs_rent")
-    private Integer rent;
+    private Float rent;
 
     @OneToMany(mappedBy = "vhsEntity")
     private Set<RentalEntity> rentals;
@@ -32,7 +32,7 @@ public class VHSEntity {
 
     }
 
-    public VHSEntity(String title, Integer rent) {
+    public VHSEntity(String title, Float rent) {
         this.title = title;
         this.rent = rent;
     }
@@ -45,7 +45,7 @@ public class VHSEntity {
         return this.title;
     }
 
-    public Integer getRent() {
+    public Float getRent() {
         return this.rent;
     }
 
@@ -57,7 +57,7 @@ public class VHSEntity {
         this.title = title;
     }
 
-    public void setRent(Integer rent) {
+    public void setRent(Float rent) {
         this.rent = rent;
     }
 }

@@ -26,6 +26,10 @@ public class RentalEntity {
     @FutureOrPresent
     private LocalDate rentDate;
 
+    @Column(name = "return_date")
+    @FutureOrPresent
+    private LocalDate returnDate;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     @NotNull(message = "User ID cannot be null.")
@@ -54,6 +58,10 @@ public class RentalEntity {
         return this.rentDate;
     }
 
+    public LocalDate getReturnDate() {
+        return this.returnDate;
+    }
+
     public UserEntity getUser() {
         return this.userEntity;
     }
@@ -62,8 +70,12 @@ public class RentalEntity {
         return this.vhsEntity;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.rentDate = endDate;
+    public void setRentDate(LocalDate rentDate) {
+        this.rentDate = rentDate;
+    }
+
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate = returnDate;
     }
 
     public void setUser(UserEntity userEntity) {
