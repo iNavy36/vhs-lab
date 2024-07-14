@@ -10,6 +10,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "rentals")
@@ -19,15 +21,19 @@ public class RentalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "rental_date", nullable = false)
+    @Column(name = "rental_date")
+    @NotNull(message = "Date of rent cannot be null.")
+    @FutureOrPresent
     private LocalDate rentDate;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
+    @NotNull(message = "User ID cannot be null.")
     private UserEntity userEntity;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "vhs_id", nullable = false)
+    @NotNull(message = "VHS ID cannot be null.")
     private VHSEntity vhsEntity;
 
     public RentalEntity() {
