@@ -22,22 +22,21 @@ public class RentalEntity {
     private Long id;
 
     @Column(name = "rental_date")
-    @NotNull(message = "Date of rent cannot be null.")
-    @FutureOrPresent
+    @NotNull(message = "{date.notnull}")
     private LocalDate rentDate;
 
     @Column(name = "return_date")
-    @FutureOrPresent
+    @FutureOrPresent(message = "{date.notpast}")
     private LocalDate returnDate;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
-    @NotNull(message = "User ID cannot be null.")
+    @NotNull(message = "{user.notnull}")
     private UserEntity userEntity;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "vhs_id", nullable = false)
-    @NotNull(message = "VHS ID cannot be null.")
+    @JoinColumn(name = "vhs_id")
+    @NotNull(message = "{vhs.notnull}")
     private VHSEntity vhsEntity;
 
     public RentalEntity() {
