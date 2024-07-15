@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class RentalController {
     @GetMapping
     List<RentalEntity> all() {
         log.info("Getting all rentals...");
-        return this.rentalRepository.findAll();
+        return rentalRepository.findAll();
     }
 
     @GetMapping("/{id}")
@@ -57,15 +57,25 @@ public class RentalController {
     }
 
     @PostMapping
-    RentalEntity newRental(@Valid @RequestBody Long user_id, @Valid @RequestBody Long vhs_id,
-            @Valid @RequestBody LocalDate date) {
-        if (userRepository.getReferenceById(user_id) == null)
+    RentalEntity newRental(@Valid @RequestParam Long user_id, @Valid @RequestParam Long vhs_id,
+            @Valid @RequestParam LocalDate date) {
+        log.info("Checking user ID...");
+        if (!userRepository.existsById(user_id))
             throw new UserNotFoundException(user_id);
-        if (userRepository.getReferenceById(vhs_id) == null)
+        log.info("Checking VHS ID...");
+        if (!vhsRepository.existsById(vhs_id))
             throw new VHSNotFoundException(vhs_id);
-        RentalEntity existingRental = rentalRepository.findByVhsEntityId(vhs_id);
-        if (existingRental != null && existingRental.getReturnDate() == null)
-            throw new RentalExistingForVHSException(vhs_id);
+        List<RentalEntity> existingRentals = vhsRepository.getReferenceById(vhs_id).getRentals();
+        // RentalEntity existingRental = rentalRepository.findByVhsEntityId(vhs_id);
+        if (existingRentals != null) {
+            for (RentalEntity existingRental : existingRentals) {
+                long daysBetween = Duration
+                        .between(existingRental.getRentDate().atStartOfDay(), date.atStartOfDay()).toDays();
+                if (existingRental.getRentDate() == date || daysBetween > 0 && existingRental.getReturnDate() == null) {
+                    throw new RentalExistingForVHSException(vhs_id);
+                }
+            }
+        }
         log.info("Creating new rental, user_id=" + user_id + ", vhs_id=" + vhs_id + ", date=" + date);
         return rentalRepository
                 .save(new RentalEntity(date, userRepository.getReferenceById(user_id),

@@ -1,0 +1,272 @@
+{
+	"info": {
+		"_postman_id": "3816d0f3-69b5-4f8f-9380-017eabb208cf",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37001427"
+	},
+	"item": [
+		{
+			"name": "VHS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/vhs",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"vhs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "no rentals",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new rental, user 1, vhs 1",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental?user_id=1&vhs_id=1&date=2024-07-30",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "vhs_id",
+							"value": "1"
+						},
+						{
+							"key": "date",
+							"value": "2024-07-30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user id not existing",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental?user_id=3&vhs_id=2&date=2024-07-18",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "3"
+						},
+						{
+							"key": "vhs_id",
+							"value": "2"
+						},
+						{
+							"key": "date",
+							"value": "2024-07-18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vhs id not existing",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental?user_id=1&vhs_id=8&date=2024-07-18",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1"
+						},
+						{
+							"key": "vhs_id",
+							"value": "8"
+						},
+						{
+							"key": "date",
+							"value": "2024-07-18"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new rental, vhs currently rented",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental?user_id=2&vhs_id=1&date=2024-08-04",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "2"
+						},
+						{
+							"key": "vhs_id",
+							"value": "1"
+						},
+						{
+							"key": "date",
+							"value": "2024-08-04"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "returned vhs, before late fee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "new rental, user 2, vhs 1, rent date before now",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental?user_id=2&vhs_id=1&date=2024-07-04",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "2"
+						},
+						{
+							"key": "vhs_id",
+							"value": "1"
+						},
+						{
+							"key": "date",
+							"value": "2024-07-04"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "returned vhs, late fee",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental/2",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all rentals after returns",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/rental",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"rental"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

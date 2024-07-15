@@ -1,6 +1,10 @@
 package com.example.lab.model;
 
-import java.util.Set;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +15,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "vhs")
 public class VHSEntity {
     @Id
@@ -26,7 +32,7 @@ public class VHSEntity {
     private Float rent;
 
     @OneToMany(mappedBy = "vhsEntity")
-    private Set<RentalEntity> rentals;
+    private List<RentalEntity> rentals;
 
     public VHSEntity() {
 
@@ -49,7 +55,7 @@ public class VHSEntity {
         return this.rent;
     }
 
-    public Set<RentalEntity> getRentals() {
+    public List<RentalEntity> getRentals() {
         return this.rentals;
     }
 
