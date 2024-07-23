@@ -9,14 +9,15 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
@@ -25,10 +26,12 @@ import org.slf4j.LoggerFactory;
 import com.example.lab.database.*;
 import com.example.lab.exceptions.*;
 import com.example.lab.model.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.Valid;
 
 @RestController
+@CrossOrigin("${UI_LOCAL}")
 @RequestMapping("/api/rental")
 public class RentalController {
     private final RentalRepository rentalRepository;
@@ -56,30 +59,32 @@ public class RentalController {
                 .orElseThrow(() -> new RentalNotFoundException(id));
     }
 
-    @PostMapping
-    RentalEntity newRental(@Valid @RequestParam Long user_id, @Valid @RequestParam Long vhs_id,
-            @Valid @RequestParam LocalDate date) {
+    @PostMapping(consumes = "application/json")
+    RentalEntity newRental(@Valid @RequestBody RentalForm rental) {
+        System.out.println(rental);
         log.info("Checking user ID...");
-        if (!userRepository.existsById(user_id))
-            throw new UserNotFoundException(user_id);
+        if (!userRepository.existsById(rental.getUserId()))
+            throw new UserNotFoundException(rental.getUserId());
         log.info("Checking VHS ID...");
-        if (!vhsRepository.existsById(vhs_id))
-            throw new VHSNotFoundException(vhs_id);
-        List<RentalEntity> existingRentals = vhsRepository.getReferenceById(vhs_id).getRentals();
-        // RentalEntity existingRental = rentalRepository.findByVhsEntityId(vhs_id);
-        if (existingRentals != null) {
+        if (!vhsRepository.existsById(rental.getVhsId()))
+            throw new VHSNotFoundException(rental.getVhsId());
+        List<RentalEntity> existingRentals = vhsRepository.getReferenceById(rental.getVhsId()).getRentals();
+        if (existingRentals != null && existingRentals.size() > 0) {
             for (RentalEntity existingRental : existingRentals) {
                 long daysBetween = Duration
-                        .between(existingRental.getRentDate().atStartOfDay(), date.atStartOfDay()).toDays();
-                if (existingRental.getRentDate() == date || daysBetween > 0 && existingRental.getReturnDate() == null) {
-                    throw new RentalExistingForVHSException(vhs_id);
+                        .between(existingRental.getRentDate().atStartOfDay(), rental.getRentDate().atStartOfDay())
+                        .toDays();
+                if (existingRental.getRentDate().equals(rental.getRentDate())
+                        || daysBetween > 0 && existingRental.getReturnDate() == null) {
+                    throw new RentalExistingForVHSException(rental.getVhsId());
                 }
             }
         }
-        log.info("Creating new rental, user_id=" + user_id + ", vhs_id=" + vhs_id + ", date=" + date);
+        log.info("Creating new rental, user_id=" + rental.getUserId() + ", vhs_id=" + rental.getVhsId()
+                + ", date=" + rental.getRentDate());
         return rentalRepository
-                .save(new RentalEntity(date, userRepository.getReferenceById(user_id),
-                        vhsRepository.getReferenceById(vhs_id)));
+                .save(new RentalEntity(rental.getRentDate(), userRepository.getReferenceById(rental.getUserId()),
+                        vhsRepository.getReferenceById(rental.getVhsId())));
     }
 
     @PutMapping("/{id}")
@@ -116,5 +121,46 @@ public class RentalController {
             errors.put(fieldName, errorMessage);
         });
         return errors;
+    }
+}
+
+class RentalForm {
+    @JsonProperty("user_id")
+    private Long user_id;
+
+    @JsonProperty("vhs_id")
+    private Long vhs_id;
+
+    @JsonProperty("rent_date")
+    private LocalDate rent_date;
+
+    RentalForm(Long user_id, Long vhs_id, LocalDate rent_date) {
+        this.user_id = user_id;
+        this.vhs_id = vhs_id;
+        this.rent_date = rent_date;
+    }
+
+    public Long getUserId() {
+        return this.user_id;
+    }
+
+    public Long getVhsId() {
+        return this.vhs_id;
+    }
+
+    public LocalDate getRentDate() {
+        return this.rent_date;
+    }
+
+    public void setUserId(Long user_id) {
+        this.user_id = user_id;
+    }
+
+    public void setVhsId(Long vhs_id) {
+        this.vhs_id = vhs_id;
+    }
+
+    public void setRentDate(LocalDate rent_date) {
+        this.rent_date = rent_date;
     }
 }

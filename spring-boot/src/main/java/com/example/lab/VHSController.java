@@ -3,6 +3,7 @@ package com.example.lab;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import com.example.lab.database.*;
 import com.example.lab.model.*;
 
 @RestController
+@CrossOrigin("${UI_LOCAL}")
 @RequestMapping("/api/vhs")
 class VHSController {
     private final VHSRepository repository;

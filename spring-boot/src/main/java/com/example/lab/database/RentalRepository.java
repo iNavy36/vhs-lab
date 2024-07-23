@@ -7,5 +7,4 @@ import com.example.lab.model.RentalEntity;
 
 @Repository
 public interface RentalRepository extends JpaRepository<RentalEntity, Long> {
-    RentalEntity findByVhsEntityId(Long vhs_id);
 }
