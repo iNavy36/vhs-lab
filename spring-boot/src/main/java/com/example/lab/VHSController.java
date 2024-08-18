@@ -24,8 +24,8 @@ class VHSController {
     }
 
     @GetMapping
-    List<VHSEntity> all() {
+    List<VHSMapped> all() {
         log.info("Getting all VHS tapes...");
-        return this.repository.findAll();
+        return this.repository.findAllMapped();
     }
 }

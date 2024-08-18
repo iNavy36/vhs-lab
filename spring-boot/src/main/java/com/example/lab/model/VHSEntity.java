@@ -2,21 +2,15 @@ package com.example.lab.model;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@NamedNativeQuery(name = "vhs_entity_mapping", query = "select vhs.vhs_id, vhs.movie_title, vhs.vhs_rent from vhs", resultSetMapping = "vhs_mapped")
+@SqlResultSetMapping(name = "vhs_mapped", classes = @ConstructorResult(targetClass = VHSMapped.class, columns = {
+        @ColumnResult(name = "vhs_id", type = Long.class),
+        @ColumnResult(name = "movie_title", type = String.class),
+        @ColumnResult(name = "vhs_rent", type = Float.class),
+}))
 @Table(name = "vhs")
 public class VHSEntity {
     @Id
@@ -31,7 +25,7 @@ public class VHSEntity {
     @Column(name = "vhs_rent")
     private Float rent;
 
-    @OneToMany(mappedBy = "vhsEntity")
+    @OneToMany(mappedBy = "vhsEntity", targetEntity = RentalEntity.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<RentalEntity> rentals;
 
     public VHSEntity() {

@@ -47,9 +47,9 @@ public class RentalController {
     }
 
     @GetMapping
-    List<RentalEntity> all() {
+    List<RentalMapped> all() {
         log.info("Getting all rentals...");
-        return rentalRepository.findAll();
+        return rentalRepository.findAllMapped();
     }
 
     @GetMapping("/{id}")
@@ -57,6 +57,12 @@ public class RentalController {
         log.info("Getting rental by id=" + id);
         return rentalRepository.findById(id)
                 .orElseThrow(() -> new RentalNotFoundException(id));
+    }
+
+    @GetMapping("/user/{id}")
+    List<RentalMapped> allUnreturnedByUser(@PathVariable Long id) {
+        log.info("Getting all unreturned rentals by user id=" + id);
+        return rentalRepository.findUserUnreturnedMapped(id);
     }
 
     @PostMapping(consumes = "application/json")
@@ -74,8 +80,8 @@ public class RentalController {
                 long daysBetween = Duration
                         .between(existingRental.getRentDate().atStartOfDay(), rental.getRentDate().atStartOfDay())
                         .toDays();
-                if (existingRental.getRentDate().equals(rental.getRentDate())
-                        || daysBetween > 0 && existingRental.getReturnDate() == null) {
+                if ((existingRental.getRentDate().equals(rental.getRentDate())
+                        || daysBetween > 0) && existingRental.getReturnDate() == null) {
                     throw new RentalExistingForVHSException(rental.getVhsId());
                 }
             }

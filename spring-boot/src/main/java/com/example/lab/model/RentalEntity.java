@@ -2,21 +2,27 @@ package com.example.lab.model;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@NamedNativeQuery(name = "rental_entity_mapping", query = "select rentals.rental_id, rentals.rental_date, rentals.return_date, vhs.movie_title, users.user_name from vhs inner join rentals on rentals.vhs_id = vhs.vhs_id inner join users on rentals.user_id = users.user_id", resultSetMapping = "rental_mapped")
+@SqlResultSetMapping(name = "rental_mapped", classes = @ConstructorResult(targetClass = RentalMapped.class, columns = {
+        @ColumnResult(name = "rental_id", type = Long.class),
+        @ColumnResult(name = "rental_date", type = LocalDate.class),
+        @ColumnResult(name = "return_date", type = LocalDate.class),
+        @ColumnResult(name = "movie_title", type = String.class),
+        @ColumnResult(name = "user_name", type = String.class),
+}))
+@NamedNativeQuery(name = "user_unret_rental_entity_mapping", query = "select rentals.rental_id, rentals.rental_date, rentals.return_date, vhs.movie_title, users.user_name from vhs inner join rentals on rentals.vhs_id = vhs.vhs_id inner join users on rentals.user_id = users.user_id where rentals.return_date is null and users.user_id = ?1", resultSetMapping = "user_unret_rental_mapped")
+@SqlResultSetMapping(name = "user_unret_rental_mapped", classes = @ConstructorResult(targetClass = RentalMapped.class, columns = {
+        @ColumnResult(name = "rental_id", type = Long.class),
+        @ColumnResult(name = "rental_date", type = LocalDate.class),
+        @ColumnResult(name = "return_date", type = LocalDate.class),
+        @ColumnResult(name = "movie_title", type = String.class),
+        @ColumnResult(name = "user_name", type = String.class),
+}))
 @Table(name = "rentals")
 public class RentalEntity {
     @Id
