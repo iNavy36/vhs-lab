@@ -1,0 +1,38 @@
+div.calendar {
+    height: 270px;
+    margin: 0%;
+}
+
+.calendar label{
+    font-size: 1.2em;
+    font-weight: bold;
+    display: block;
+    padding: 5%;
+}
+
+.calendar input{
+    margin-left: 2%;
+}
+
+.calendar form{
+    height: 100%;
+}
+
+.submitButton{
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-size: 1em;
+    font-weight: 550;
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 1%;
+    padding-bottom: 2%;
+    background-color: rgba(255,255,255,0.4);
+    border-width: 0;
+    border-radius: 4px;
+    &:hover {
+        background-color: rgba(255,255,255,0.3);
+    }
+    &:active {
+        background-color: rgba(255,255,255,0.25);
+    }
+}

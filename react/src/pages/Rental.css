@@ -1,0 +1,12 @@
+.rentallist {
+    max-height: 324px;
+}
+
+.rentallist table {
+    width: 100%
+}
+
+.rentallist thead th {
+    position: sticky;
+    top: 0;
+}
